@@ -1,0 +1,39 @@
+# Sistema
+.DS_Store
+Thumbs.db
+*.log
+
+# Configuración local (no subir credenciales)
+config/database.php
+config/config.local.php
+.env
+.env.local
+
+# Archivos de debug (temporales)
+debug_*.php
+migrate_*.php
+run_migration.php
+setup_*.php
+add_video_column.php
+update_program_schema.php
+migration_docs.php
+
+# Almacenamiento de uploads (subir solo la carpeta vacía)
+storage/uploads/*
+!storage/uploads/.gitkeep
+
+# Dependencias de Composer (si aplica)
+vendor/
+
+# Cache
+*.cache
+cache/
+
+# IDE
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# SQL scripts sensibles (opcional, comentar si deseas incluirlos)
+# *.sql

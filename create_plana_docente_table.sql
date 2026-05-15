@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS plana_docente (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    programa_id INT NULL,
+    nombre VARCHAR(255) NOT NULL,
+    cargo VARCHAR(255) DEFAULT 'Docente',
+    foto VARCHAR(255) NULL,
+    cv VARCHAR(255) NULL,
+    carga_horaria VARCHAR(255) NULL,
+    orden INT DEFAULT 0,
+    activo TINYINT(1) DEFAULT 1,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (programa_id) REFERENCES programas_estudio(id) ON DELETE SET NULL
+);
