@@ -1,0 +1,65 @@
+# ============================================================
+# .htaccess PRODUCCIÓN - Portal ACIP
+# Subir este archivo como .htaccess en el servidor cPanel
+# ============================================================
+
+Options -Indexes
+Options +FollowSymLinks
+
+# ── Variables de entorno ────────────────────────────────────
+SetEnv APP_ENV      production
+SetEnv APP_NAME     "Portal Institucional ACIP"
+SetEnv APP_URL      https://www.iespacip.edu.pe
+
+# Base de datos producción
+SetEnv DB_HOST      localhost
+SetEnv DB_NAME      iespacipedu_portal_acip
+SetEnv DB_USER      iespacipedu_user_portal_acip
+SetEnv DB_PASS      "qXd($&L~Zz244c&+"
+
+# ── Seguridad ───────────────────────────────────────────────
+# Ocultar versión PHP
+Header always unset X-Powered-By
+Header set X-Content-Type-Options "nosniff"
+Header set X-Frame-Options "SAMEORIGIN"
+Header set X-XSS-Protection "1; mode=block"
+Header set Referrer-Policy "strict-origin-when-cross-origin"
+
+# Proteger archivos sensibles
+<FilesMatch "\.(env|log|sql|py|sh|bak|git)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+<FilesMatch "^(composer\.(json|lock)|package\.json|README\.md)$">
+    Order deny,allow
+    Deny from all
+</FilesMatch>
+
+# ── Reescritura de URLs ──────────────────────────────────────
+RewriteEngine On
+
+# Forzar HTTPS
+RewriteCond %{HTTPS} off
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Forzar www (opcional, comentar si no deseas)
+# RewriteCond %{HTTP_HOST} !^www\. [NC]
+# RewriteRule ^(.*)$ https://www.%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Redirigir todo al index.php (Front Controller)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# ── Cache de archivos estáticos ──────────────────────────────
+<FilesMatch "\.(jpg|jpeg|png|gif|webp|svg|ico|css|js|woff|woff2|ttf)$">
+    Header set Cache-Control "max-age=2592000, public"
+</FilesMatch>
+
+# ── Compresión GZIP ──────────────────────────────────────────
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml
+    AddOutputFilterByType DEFLATE text/css text/javascript
+    AddOutputFilterByType DEFLATE application/javascript application/json
+</IfModule>

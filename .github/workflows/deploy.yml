@@ -1,0 +1,49 @@
+name: 🚀 Deploy ACIP Portal → cPanel FTP
+
+on:
+  push:
+    branches:
+      - main   # Se activa al hacer push a la rama main
+
+jobs:
+  deploy:
+    name: Deploy vía FTP
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Descargar el código del repositorio
+      - name: 📥 Checkout código
+        uses: actions/checkout@v4
+
+      # 2. Subir archivos al servidor cPanel vía FTPS
+      - name: 📤 Subir archivos al servidor (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server:    ${{ secrets.FTP_SERVER }}
+          username:  ${{ secrets.FTP_USERNAME }}
+          password:  ${{ secrets.FTP_PASSWORD }}
+          port:      21
+          protocol:  ftps          # FTPS explícito (TLS en puerto 21)
+          server-dir: /            # Raíz FTP = public_html en cPanel
+          local-dir:  ./           # Todo el proyecto
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            **/.DS_Store
+            **/ftp_upload.py
+            **/.env
+            **/storage/logs/**
+          dangerous-clean-slate: false   # No borrar archivos existentes
+
+      # 3. Notificación de éxito
+      - name: ✅ Despliegue completado
+        if: success()
+        run: |
+          echo "✅ Portal ACIP desplegado exitosamente"
+          echo "🌐 URL: https://www.iespacip.edu.pe"
+
+      # 4. Notificación de fallo
+      - name: ❌ Falló el despliegue
+        if: failure()
+        run: echo "❌ El despliegue falló. Revisa los logs."
