@@ -22,7 +22,8 @@ jobs:
           mkdir -p deploy
 
           # Backend (fuera del docroot en estructura local, en raíz en cPanel)
-          cp -r app config includes storage deploy/
+          cp -r app config includes deploy/
+          mkdir -p deploy/storage/{cache,logs,sessions,uploads}
 
           # Contenido público en la raíz de public_html
           cp -r public/. deploy/
