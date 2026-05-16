@@ -13,9 +13,9 @@ from pathlib import Path
 # Configuración FTP
 FTP_HOST = "ftp.iespacip.edu.pe"
 FTP_PORT = 21
-FTP_USER = "masterweb@iespacip.edu.pe"
+FTP_USER = "portal@iespacip.edu.pe"
 FTP_PASS = "5dU3r6mC6km(ivTp"
-REMOTE_ROOT = ""  # Esta cuenta ya apunta a public_html
+REMOTE_ROOT = ""  # Esta cuenta ya apunta a public_html o la carpeta del dominio
 
 # Directorio local del proyecto
 LOCAL_ROOT = Path(__file__).parent
