@@ -24,7 +24,7 @@ jobs:
           password:  ${{ secrets.FTP_PASSWORD }}
           port:      21
           protocol:  ftps          # FTPS explícito (TLS en puerto 21)
-          server-dir: /            # Raíz FTP = public_html en cPanel
+          server-dir: public_html/
           local-dir:  ./           # Todo el proyecto
           exclude: |
             **/.git*

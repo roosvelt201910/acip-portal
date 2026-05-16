@@ -61,26 +61,33 @@ def upload_file(ftp, local_path, remote_path):
 def upload_directory(ftp, local_dir, remote_dir):
     """Sube recursivamente un directorio"""
     # Crear directorio remoto
-    make_remote_dir(ftp, remote_dir)
-    
+    """Sube un directorio completo recursivamente"""
+    # Asegurar que el directorio remoto existe
+    parts = remote_dir.strip('/').split('/')
+    current = ""
+    for part in parts:
+        current += "/" + part
+        try:
+            ftp.mkd(current)
+            print(f"  📂 Creado: {current}")
+        except:
+            pass # Ya existe o error
+
+    try:
+        ftp.cwd(remote_dir)
+    except:
+        return
+
     uploaded = 0
     failed = 0
-    
-    try:
-        entries = sorted(os.listdir(local_dir))
-    except PermissionError:
-        return 0, 0
-    
-    for entry in entries:
-        if should_exclude(entry):
-            print(f"  ⏭️  Saltando: {entry}")
-            continue
+
+    for entry in os.listdir(local_dir):
+        if should_exclude(entry): continue
         
         local_path = os.path.join(local_dir, entry)
         remote_path = f"{remote_dir}/{entry}"
         
         if os.path.isdir(local_path):
-            print(f"\n📂 Procesando carpeta: {remote_path}")
             u, f = upload_directory(ftp, local_path, remote_path)
             uploaded += u
             failed += f
@@ -94,56 +101,54 @@ def upload_directory(ftp, local_dir, remote_dir):
 
 def main():
     print("=" * 60)
-    print("🚀 ACIP Portal - Subida FTP")
+    print("🚀 ACIP Portal - Despliegue Profesional cPanel")
     print("=" * 60)
-    print(f"Servidor: {FTP_HOST}:{FTP_PORT}")
+    print(f"Servidor: {FTP_HOST}")
     print(f"Usuario:  {FTP_USER}")
-    print(f"Destino:  {REMOTE_ROOT}")
-    print(f"Origen:   {LOCAL_ROOT}")
     print("=" * 60)
     
-    # Crear contexto SSL para FTPS explícito
     ctx = ssl.create_default_context()
     ctx.check_hostname = False
-    ctx.verify_mode = ssl.CERT_NONE  # Ignorar cert inválido del servidor
-    
-    print("\n🔌 Conectando al servidor FTP...")
+    ctx.verify_mode = ssl.CERT_NONE
     
     try:
         ftp = ftplib.FTP_TLS(context=ctx)
         ftp.connect(FTP_HOST, FTP_PORT, timeout=30)
-        print(f"✅ Conectado: {ftp.getwelcome()[:60]}")
-        
         ftp.login(FTP_USER, FTP_PASS)
-        ftp.prot_p()  # Proteger canal de datos con TLS
-        print("✅ Autenticado correctamente\n")
+        ftp.prot_p()
+        print("✅ Conectado y autenticado\n")
+
+        # 1. Subir TODO el proyecto dentro de public_html para asegurar funcionamiento
+        print("📤 Subiendo proyecto a /public_html...")
         
-        # Verificar directorio destino
-        try:
-            ftp.cwd(REMOTE_ROOT)
-            print(f"✅ Directorio destino: {REMOTE_ROOT}")
-        except ftplib.error_perm:
-            print(f"⚠️  {REMOTE_ROOT} no existe, usando raíz /")
-            REMOTE_ROOT_USED = "/"
-        
-        print("\n📤 Iniciando subida de archivos...\n")
-        
-        total_up, total_fail = upload_directory(ftp, str(LOCAL_ROOT), REMOTE_ROOT)
-        
+        # Carpetas de sistema
+        for folder in ['app', 'config', 'includes', 'storage']:
+            local_path = os.path.join(LOCAL_ROOT, folder)
+            if os.path.exists(local_path):
+                upload_directory(ftp, local_path, f"/public_html/{folder}")
+
+        # Contenido de public (assets, etc)
+        public_local_path = os.path.join(LOCAL_ROOT, 'public')
+        if os.path.exists(public_local_path):
+            for entry in os.listdir(public_local_path):
+                if should_exclude(entry): continue
+                local_entry_path = os.path.join(public_local_path, entry)
+                if os.path.isdir(local_entry_path):
+                    upload_directory(ftp, local_entry_path, f"/public_html/{entry}")
+                else:
+                    upload_file(ftp, local_entry_path, f"/public_html/{entry}")
+
         print("\n" + "=" * 60)
-        print(f"✅ Subidos:  {total_up} archivos")
-        print(f"❌ Fallidos: {total_fail} archivos")
+        print("🎉 ¡Despliegue completado en public_html!")
+        print("🌐 Revisa: https://iespacip.edu.pe")
         print("=" * 60)
         
         ftp.quit()
-        print("\n🎉 ¡Subida completada!")
         
-    except ftplib.all_errors as e:
-        print(f"\n❌ Error FTP: {e}")
-        sys.exit(1)
     except Exception as e:
-        print(f"\n❌ Error inesperado: {e}")
+        print(f"\n❌ Error: {e}")
         sys.exit(1)
+
 
 if __name__ == "__main__":
     main()
