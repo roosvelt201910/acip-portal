@@ -53,7 +53,7 @@ jobs:
             **/.DS_Store
             **/.env
             **/storage/logs/**
-          dangerous-clean-slate: false
+          dangerous-clean-slate: true
 
       - name: ✅ Despliegue completado
         if: success()
