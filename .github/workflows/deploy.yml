@@ -24,7 +24,7 @@ jobs:
           password:  ${{ secrets.FTP_PASSWORD }}
           port:      21
           protocol:  ftps          # FTPS explícito (TLS en puerto 21)
-          server-dir: public_html/
+          server-dir: iespacip.edu.pe/
           local-dir:  ./           # Todo el proyecto
           exclude: |
             **/.git*

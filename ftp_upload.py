@@ -118,28 +118,28 @@ def main():
         ftp.prot_p()
         print("✅ Conectado y autenticado\n")
 
-        # 1. Subir TODO el proyecto dentro de public_html para asegurar funcionamiento
-        print("📤 Subiendo proyecto a /public_html...")
+        # 1. Subir TODO el proyecto dentro de la carpeta del DOMINIO
+        print("📤 Subiendo proyecto a /iespacip.edu.pe...")
         
         # Carpetas de sistema
         for folder in ['app', 'config', 'includes', 'storage']:
             local_path = os.path.join(LOCAL_ROOT, folder)
             if os.path.exists(local_path):
-                upload_directory(ftp, local_path, f"/public_html/{folder}")
+                upload_directory(ftp, local_path, f"/iespacip.edu.pe/{folder}")
 
-        # Contenido de public (assets, etc)
+        # Contenido de public (assets, index.php, .htaccess)
         public_local_path = os.path.join(LOCAL_ROOT, 'public')
         if os.path.exists(public_local_path):
             for entry in os.listdir(public_local_path):
                 if should_exclude(entry): continue
                 local_entry_path = os.path.join(public_local_path, entry)
                 if os.path.isdir(local_entry_path):
-                    upload_directory(ftp, local_entry_path, f"/public_html/{entry}")
+                    upload_directory(ftp, local_entry_path, f"/iespacip.edu.pe/{entry}")
                 else:
-                    upload_file(ftp, local_entry_path, f"/public_html/{entry}")
+                    upload_file(ftp, local_entry_path, f"/iespacip.edu.pe/{entry}")
 
         print("\n" + "=" * 60)
-        print("🎉 ¡Despliegue completado en public_html!")
+        print("🎉 ¡Despliegue completado en la carpeta del dominio!")
         print("🌐 Revisa: https://iespacip.edu.pe")
         print("=" * 60)
         
