@@ -13,9 +13,9 @@ from pathlib import Path
 # Configuración FTP
 FTP_HOST = "ftp.iespacip.edu.pe"
 FTP_PORT = 21
-FTP_USER = "master@iespacip.edu.pe"
+FTP_USER = "masterweb@iespacip.edu.pe"
 FTP_PASS = "5dU3r6mC6km(ivTp"
-REMOTE_ROOT = ""  # La raíz FTP YA ES public_html en cPanel
+REMOTE_ROOT = ""  # Esta cuenta ya apunta a public_html
 
 # Directorio local del proyecto
 LOCAL_ROOT = Path(__file__).parent
@@ -118,14 +118,14 @@ def main():
         ftp.prot_p()
         print("✅ Conectado y autenticado\n")
 
-        # 1. Subir TODO el proyecto dentro de la carpeta del DOMINIO
-        print("📤 Subiendo proyecto a /iespacip.edu.pe...")
+        # 1. Subir TODO el proyecto dentro de la raíz de esta cuenta (public_html)
+        print(f"📤 Subiendo proyecto a la raíz de {FTP_USER}...")
         
         # Carpetas de sistema
         for folder in ['app', 'config', 'includes', 'storage']:
             local_path = os.path.join(LOCAL_ROOT, folder)
             if os.path.exists(local_path):
-                upload_directory(ftp, local_path, f"/iespacip.edu.pe/{folder}")
+                upload_directory(ftp, local_path, f"/{folder}")
 
         # Contenido de public (assets, index.php, .htaccess)
         public_local_path = os.path.join(LOCAL_ROOT, 'public')
@@ -134,12 +134,12 @@ def main():
                 if should_exclude(entry): continue
                 local_entry_path = os.path.join(public_local_path, entry)
                 if os.path.isdir(local_entry_path):
-                    upload_directory(ftp, local_entry_path, f"/iespacip.edu.pe/{entry}")
+                    upload_directory(ftp, local_entry_path, f"/{entry}")
                 else:
-                    upload_file(ftp, local_entry_path, f"/iespacip.edu.pe/{entry}")
+                    upload_file(ftp, local_entry_path, f"/{entry}")
 
         print("\n" + "=" * 60)
-        print("🎉 ¡Despliegue completado en la carpeta del dominio!")
+        print("🎉 ¡Despliegue completado con la nueva cuenta!")
         print("🌐 Revisa: https://iespacip.edu.pe")
         print("=" * 60)
         
