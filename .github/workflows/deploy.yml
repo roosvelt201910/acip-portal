@@ -3,7 +3,8 @@ name: 🚀 Deploy ACIP Portal → cPanel FTP
 on:
   push:
     branches:
-      - main   # Se activa al hacer push a la rama main
+      - main
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -11,39 +12,53 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1. Descargar el código del repositorio
       - name: 📥 Checkout código
         uses: actions/checkout@v4
 
-      # 2. Subir archivos al servidor cPanel vía FTPS
+      - name: 📦 Preparar archivos para public_html
+        run: |
+          set -e
+          rm -rf deploy
+          mkdir -p deploy
+
+          # Backend (fuera del docroot en estructura local, en raíz en cPanel)
+          cp -r app config includes storage deploy/
+
+          # Contenido público en la raíz de public_html
+          cp -r public/. deploy/
+          cp public/.htaccess.production deploy/.htaccess
+
+          # Rutas correctas cuando index.php está en la raíz de public_html
+          sed -i "s/define('BASE_PATH', dirname(__DIR__));/define('BASE_PATH', __DIR__);/" deploy/index.php
+
+          # Archivos de prueba / debug (no subir a producción)
+          rm -f deploy/test_deploy.php deploy/info.php deploy/fix_reclamaciones_db.php deploy/test_doc.txt
+
       - name: 📤 Subir archivos al servidor (FTP)
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
-          server:    ${{ secrets.FTP_SERVER }}
-          username:  ${{ secrets.FTP_USERNAME }}
-          password:  ${{ secrets.FTP_PASSWORD }}
-          port:      21
-          protocol:  ftps          # FTPS explícito (TLS en puerto 21)
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          port: 21
+          protocol: ftps
           server-dir: iespacip.edu.pe/
-          local-dir:  ./           # Todo el proyecto
+          local-dir: ./deploy/
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/.DS_Store
-            **/ftp_upload.py
             **/.env
             **/storage/logs/**
-          dangerous-clean-slate: false   # No borrar archivos existentes
+          dangerous-clean-slate: true
 
-      # 3. Notificación de éxito
       - name: ✅ Despliegue completado
         if: success()
         run: |
           echo "✅ Portal ACIP desplegado exitosamente"
           echo "🌐 URL: https://www.iespacip.edu.pe"
 
-      # 4. Notificación de fallo
       - name: ❌ Falló el despliegue
         if: failure()
         run: echo "❌ El despliegue falló. Revisa los logs."
