@@ -15,8 +15,16 @@ function e($string) {
  * Generar URL de la aplicación
  */
 function url($path = '') {
-    $config = require __DIR__ . '/../config/app.php';
-    return rtrim($config['url'], '/') . '/' . ltrim($path, '/');
+    $protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+    $host = $_SERVER['HTTP_HOST'] ?? 'localhost';
+    
+    // Detectar si estamos en un subdirectorio (como /public/)
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $basePath = str_replace('/index.php', '', $scriptName);
+    
+    $baseUrl = $protocol . '://' . $host . $basePath;
+    
+    return rtrim($baseUrl, '/') . '/' . ltrim($path, '/');
 }
 
 /**
