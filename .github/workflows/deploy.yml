@@ -43,8 +43,9 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           protocol: ftps
-          server-dir: ./
+          server-dir: iespacip.edu.pe/
           local-dir: ./deploy/
+          timeout: 600000
           exclude: |
             **/.git*
             **/.git*/**
@@ -52,7 +53,7 @@ jobs:
             **/.DS_Store
             **/.env
             **/storage/logs/**
-          dangerous-clean-slate: true
+          dangerous-clean-slate: false
 
       - name: ✅ Despliegue completado
         if: success()
