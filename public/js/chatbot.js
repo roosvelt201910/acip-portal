@@ -306,7 +306,7 @@ class ACIPChatbot {
                     • Cursos de especialización<br>
                     • Programas de actualización<br><br>
                     Todos nuestros programas están acreditados y tienen convenios con empresas para prácticas profesionales.<br><br>
-                    <a href="${window.location.origin}/web/acip-portal/public/programas" style="color: #4f46e5; text-decoration: underline;">Ver todos los programas</a>
+                    <a href="programas" style="color: #4f46e5; text-decoration: underline;">Ver todos los programas</a>
                 `,
                 options: [
                     { text: '⏱️ Duración de programas', action: 'duracion_programas' },
@@ -349,7 +349,7 @@ class ACIPChatbot {
                     • Profesionales en actividad<br>
                     • Especialistas en sus áreas<br>
                     • Capacitación continua<br><br>
-                    <a href="${window.location.origin}/web/acip-portal/public/plana-docente" style="color: #4f46e5; text-decoration: underline;">Conoce a nuestros docentes</a>
+                    <a href="plana-docente" style="color: #4f46e5; text-decoration: underline;">Conoce a nuestros docentes</a>
                 `,
                 options: [
                     { text: '📚 Ver programas', action: 'programas' },
@@ -371,7 +371,7 @@ class ACIPChatbot {
                     ${this.getSiteConfig('site_email', 'contacto@acip.edu.pe')}<br><br>
                     <strong>Horario:</strong><br>
                     ${this.getSiteConfig('site_horario', 'Lun - Vie: 8:00 AM - 6:00 PM')}<br><br>
-                    <a href="${window.location.origin}/web/acip-portal/public/contacto" style="color: #4f46e5; text-decoration: underline;">Enviar mensaje</a>
+                    <a href="contacto" style="color: #4f46e5; text-decoration: underline;">Enviar mensaje</a>
                 `,
                 options: [
                     { text: '🗺️ Ver mapa', action: 'mapa' },
@@ -386,7 +386,7 @@ class ACIPChatbot {
                 response: `
                     <strong>📅 Eventos</strong><br><br>
                     Mantente informado sobre nuestros eventos académicos, culturales y deportivos.<br><br>
-                    <a href="${window.location.origin}/web/acip-portal/public/eventos" style="color: #4f46e5; text-decoration: underline;">Ver calendario de eventos</a>
+                    <a href="eventos" style="color: #4f46e5; text-decoration: underline;">Ver calendario de eventos</a>
                 `,
                 options: [
                     { text: '📰 Noticias', action: 'noticias' },
@@ -399,7 +399,7 @@ class ACIPChatbot {
                 response: `
                     <strong>📰 Noticias</strong><br><br>
                     Mantente al día con las últimas noticias y comunicados del instituto.<br><br>
-                    <a href="${window.location.origin}/web/acip-portal/public/noticias" style="color: #4f46e5; text-decoration: underline;">Ver todas las noticias</a>
+                    <a href="noticias" style="color: #4f46e5; text-decoration: underline;">Ver todas las noticias</a>
                 `,
                 options: [
                     { text: '📅 Eventos', action: 'eventos' },
