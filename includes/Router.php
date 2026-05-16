@@ -32,26 +32,15 @@ class Router {
         $requestMethod = $_SERVER['REQUEST_METHOD'];
         $requestUri = $_SERVER['REQUEST_URI'];
         
-        // Obtener path relativo
-        $scriptName = $_SERVER['SCRIPT_NAME'];
-        $scriptDir = dirname($scriptName);
-        
         // Remover query string
-        $pathWithoutQuery = $requestUri;
-        if (($pos = strpos($pathWithoutQuery, '?')) !== false) {
-            $pathWithoutQuery = substr($pathWithoutQuery, 0, $pos);
-        }
+        $pathWithoutQuery = parse_url($requestUri, PHP_URL_PATH);
         
-        // Calcular requestPath
-        if (strpos($pathWithoutQuery, $scriptName) === 0) {
-            $requestPath = substr($pathWithoutQuery, strlen($scriptName));
-        } elseif (strpos($pathWithoutQuery, $scriptDir) === 0) {
-            $requestPath = substr($pathWithoutQuery, strlen($scriptDir));
-        } else {
-            $requestPath = $pathWithoutQuery;
-        }
+        // Limpiar la ruta para que funcione en cualquier carpeta
+        $basePath = dirname($_SERVER['SCRIPT_NAME']);
+        $requestPath = substr($pathWithoutQuery, strlen($basePath));
         
         $requestPath = '/' . trim($requestPath, '/');
+        if (empty($requestPath)) $requestPath = '/';
         
         foreach ($this->routes as $route) {
             if ($route['method'] !== $requestMethod) {
