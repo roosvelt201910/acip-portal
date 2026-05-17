@@ -23,6 +23,7 @@
     
     <!-- CSS Principal -->
     <link rel="stylesheet" href="<?= asset('css/style.css') ?>?v=<?= time() ?>">
+    <link rel="stylesheet" href="<?= asset('css/responsive.css') ?>?v=<?= time() ?>">
     
     <!-- Chatbot CSS -->
     <link rel="stylesheet" href="<?= url('css/chatbot.css') ?>?v=<?= time() ?>">
@@ -256,72 +257,6 @@
         </a>
         <?php endif; ?>
     </div>
-
-    <style>
-        .floating-social {
-            position: fixed;
-            top: 50%;
-            right: 0;
-            transform: translateY(-50%);
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
-            gap: 5px;
-        }
-
-        .float-icon {
-            width: 45px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            color: white;
-            border-top-left-radius: 8px;
-            border-bottom-left-radius: 8px;
-            box-shadow: -2px 2px 5px rgba(0,0,0,0.2);
-            transition: all 0.3s ease;
-            text-decoration: none;
-        }
-
-        .float-icon:hover {
-            width: 55px;
-            padding-right: 5px;
-            color: white;
-        }
-
-        .float-fb { background: #1877F2; }
-        .float-fb:hover { background: #1461c7; }
-
-        .float-ig { 
-            background: linear-gradient(45deg, #405de6, #5851db, #833ab4, #c13584, #e1306c, #fd1d1d);
-        }
-        .float-ig:hover { opacity: 0.9; }
-
-        .float-yt { background: #FF0000; }
-        .float-yt:hover { background: #CC0000; }
-
-        .float-tw { background: #000000; }
-        .float-tw:hover { background: #333333; }
-
-        .float-tk { background: #000000; } 
-        /* TikTok often uses black or a gradient. Let's use black with a border or gradient */
-        .float-tk { 
-            background: linear-gradient(45deg, #000000, #25F4EE, #FE2C55); 
-            background-size: 200% 200%;
-            animation: gradientBG 3s ease infinite;
-        }
-        .float-tk:hover { opacity: 0.9; }
-
-        .float-wa { background: #25D366; }
-        .float-wa:hover { background: #1ebe57; }
-
-        @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-    </style>
 
     <!-- JavaScript -->
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
