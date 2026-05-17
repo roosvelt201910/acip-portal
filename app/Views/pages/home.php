@@ -4,10 +4,21 @@ ob_start();
 
 <!-- Modal Aviso -->
 <?php if (!empty($aviso)): ?>
-<div id="avisoModal" class="aviso-modal">
-    <div class="aviso-modal-content">
-        <button class="aviso-modal-close" onclick="closeAvisoModal()">&times;</button>
-        
+<div id="avisoModal" class="aviso-modal" role="dialog" aria-modal="true" aria-labelledby="avisoModalTitle" aria-hidden="true">
+    <div class="aviso-modal-backdrop" onclick="closeAvisoModal()" aria-hidden="true"></div>
+    <div class="aviso-modal-dialog">
+        <div class="aviso-modal-content">
+            <div class="aviso-modal-header">
+                <div class="aviso-modal-header-text">
+                    <span class="aviso-modal-badge">Aviso institucional</span>
+                    <h2 id="avisoModalTitle"><?= e($aviso['titulo']) ?></h2>
+                </div>
+                <button type="button" class="aviso-modal-close" onclick="closeAvisoModal()" aria-label="Cerrar aviso">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <div class="aviso-modal-body">
         <?php if ($aviso['tipo_contenido'] === 'imagen' && $aviso['imagen']): ?>
             <div class="aviso-imagen">
                 <img src="<?= url($aviso['imagen']) ?>" alt="<?= e($aviso['titulo']) ?>">
@@ -37,163 +48,34 @@ ob_start();
             </div>
         <?php endif; ?>
         
-        <?php if ($aviso['enlace_boton']): ?>
-            <div class="aviso-actions">
-                <a href="<?= e($aviso['enlace_boton']) ?>" class="btn btn-primary" target="_blank">
-                    <?= e($aviso['texto_boton'] ?: 'Más información') ?>
-                </a>
+            </div>
+
+        <?php if ($aviso['enlace_boton'] || $aviso['mostrar_una_vez']): ?>
+            <div class="aviso-modal-footer">
+                <?php if ($aviso['enlace_boton']): ?>
+                    <div class="aviso-actions">
+                        <a href="<?= e($aviso['enlace_boton']) ?>" class="aviso-btn-primary" target="_blank" rel="noopener">
+                            <?= e($aviso['texto_boton'] ?: 'Más información') ?>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($aviso['mostrar_una_vez']): ?>
+                    <div class="aviso-checkbox">
+                        <label>
+                            <input type="checkbox" id="noMostrarDeNuevo" onchange="toggleNoShowAgain()">
+                            <span>No volver a mostrar este aviso</span>
+                        </label>
+                    </div>
+                <?php endif; ?>
             </div>
         <?php endif; ?>
-        
-        <?php if ($aviso['mostrar_una_vez']): ?>
-            <div class="aviso-checkbox">
-                <label>
-                    <input type="checkbox" id="noMostrarDeNuevo" onchange="toggleNoShowAgain()">
-                    No mostrar de nuevo
-                </label>
-            </div>
-        <?php endif; ?>
+        </div>
     </div>
 </div>
 
-<style>
-.aviso-modal {
-    display: none;
-    position: fixed;
-    z-index: 9999;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    overflow: auto;
-    background-color: rgba(0, 0, 0, 0.7);
-    animation: fadeIn 0.3s ease;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-.aviso-modal-content {
-    background-color: #fff;
-    margin: 5% auto;
-    padding: 0;
-    border-radius: 12px;
-    max-width: 600px;
-    width: 90%;
-    max-height: 90vh; /* Constraint height */
-    overflow-y: auto; /* Allow internal scrolling */
-    position: relative;
-    animation: slideDown 0.3s ease;
-    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-    display: flex;
-    flex-direction: column;
-}
-
-@keyframes slideDown {
-    from {
-        transform: translateY(-50px);
-        opacity: 0;
-    }
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
-}
-
-    position: absolute;
-    right: 10px;
-    top: 10px;
-    z-index: 100; /* Ensure it stays above content */
-    color: #fff;
-    background: rgba(0, 0, 0, 0.6);
-    border: none;
-    font-size: 24px;
-    font-weight: bold;
-    cursor: pointer;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.2s;
-    text-shadow: none;
-    line-height: 1;
-    transition: background 0.2s;
-}
-
-.aviso-modal-close:hover {
-    background: rgba(0, 0, 0, 0.8);
-}
-
-.aviso-imagen img {
-    width: 100%;
-    border-radius: 12px 12px 0 0;
-    display: block;
-}
-
-.aviso-video {
-    position: relative;
-    padding-bottom: 56.25%;
-    height: 0;
-    overflow: hidden;
-    border-radius: 12px 12px 0 0;
-}
-
-.aviso-video iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-}
-
-.aviso-html {
-    padding: 30px;
-}
-
-.aviso-actions {
-    padding: 20px 30px;
-    text-align: center;
-}
-
-.aviso-checkbox {
-    padding: 15px 30px 20px;
-    border-top: 1px solid #e2e8f0;
-}
-
-.aviso-checkbox label {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    cursor: pointer;
-    font-size: 0.9rem;
-    color: #64748b;
-}
-
-.aviso-checkbox input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-}
-
-@media (max-width: 768px) {
-    .aviso-modal-content {
-        margin: 5% auto; /* Reduced top margin on mobile */
-        width: 95%;
-        max-height: 95vh;
-    }
-    
-    .aviso-modal-close {
-        width: 35px;
-        height: 35px;
-        font-size: 24px;
-        background: rgba(0,0,0,0.7); /* Darker background for visibility */
-    }
-}
-</style>
+<link rel="stylesheet" href="<?= asset('css/aviso-modal.css') ?>?v=<?= time() ?>">
 
 <script>
 // Modal Aviso Logic
@@ -210,17 +92,23 @@ ob_start();
         return;
     }
 
-    // Show modal after a short delay
-    setTimeout(function() {
-        modal.style.display = 'block';
+    function openAvisoModal() {
+        modal.classList.add('is-visible');
+        modal.setAttribute('aria-hidden', 'false');
         document.body.style.overflow = 'hidden';
-    }, 1000);
+    }
+
+    function closeAvisoModalInternal() {
+        modal.classList.remove('is-visible');
+        modal.setAttribute('aria-hidden', 'true');
+        document.body.style.overflow = '';
+    }
+
+    // Show modal after a short delay
+    setTimeout(openAvisoModal, 1000);
 
     // Close modal function
-    window.closeAvisoModal = function() {
-        modal.style.display = 'none';
-        document.body.style.overflow = 'auto';
-    };
+    window.closeAvisoModal = closeAvisoModalInternal;
 
     // Toggle "no show again"
     window.toggleNoShowAgain = function() {
@@ -232,12 +120,12 @@ ob_start();
         }
     };
 
-    // Close when clicking outside
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            closeAvisoModal();
+    // Cerrar con Escape
+    document.addEventListener('keydown', function(event) {
+        if (event.key === 'Escape' && modal.classList.contains('is-visible')) {
+            closeAvisoModalInternal();
         }
-    };
+    });
 })();
 </script>
 <?php endif; ?>
