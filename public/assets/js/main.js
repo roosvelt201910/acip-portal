@@ -161,7 +161,7 @@ document.addEventListener('DOMContentLoaded', function () {
     // SLIDER DE NOTICIAS (VANILLA JS IMPLEMENTATION)
     // ============================================
     // ============================================
-    // SLIDER DE NOTICIAS (2-COLUMN CAROUSEL + CLONING)
+    // SLIDER DE NOTICIAS (3-COLUMN CAROUSEL + CLONING)
     // ============================================
     const newsContainer = document.querySelector('#news-revolver');
     if (newsContainer) {
@@ -171,15 +171,21 @@ document.addEventListener('DOMContentLoaded', function () {
         const prevBtn = document.getElementById('news-prev-btn');
         const nextBtn = document.getElementById('news-next-btn');
 
-        // CLONING LOGIC: Ensure enough slides for scrolling
-        // We need substantially more slides than the viewport count (2) to allow scrolling.
-        // If we have 1 item -> needs 4+ copies.
-        // If we have 2 items -> needs 2+ copies.
-        // Goal: Minimum 6 slides for smooth looping.
+        function getNewsSliderConfig() {
+            const width = window.innerWidth;
+            if (width < 768) {
+                return { slidesPerView: 1, slidePercent: 100 };
+            }
+            if (width < 1100) {
+                return { slidesPerView: 2, slidePercent: 50 };
+            }
+            return { slidesPerView: 3, slidePercent: 100 / 3 };
+        }
 
+        // CLONING LOGIC: Ensure enough slides for smooth scrolling
         if (slides.length > 0) {
             let currentCount = slides.length;
-            const minSlides = 6;
+            const minSlides = 9;
 
             // Keep appending copies of the original set until we reach minSlides
             while (currentCount < minSlides) {
@@ -207,11 +213,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Start AutoPlay
         function startAutoPlay() {
-            // Determine slidesPerView based on window width
-            const isMobile = window.innerWidth < 900;
-            const viewCount = isMobile ? 1 : 2;
-
-            if (slides.length > viewCount) {
+            const { slidesPerView } = getNewsSliderConfig();
+            if (slides.length > slidesPerView) {
                 autoPlayInterval = setInterval(nextSlide, 5000);
             }
         }
@@ -229,25 +232,19 @@ document.addEventListener('DOMContentLoaded', function () {
         }
 
         function updateSliderPosition() {
-            const isMobile = window.innerWidth < 900;
-            const percent = isMobile ? 100 : 50;
-            const slidesPerView = isMobile ? 1 : 2;
+            const { slidesPerView, slidePercent } = getNewsSliderConfig();
+            const maxIndex = Math.max(0, slides.length - slidesPerView);
 
-            // Max index based on view
-            const maxIndex = slides.length - slidesPerView;
-
-            // Boundary checks
             if (currentIndex > maxIndex) currentIndex = 0;
             if (currentIndex < 0) currentIndex = maxIndex;
 
-            track.style.transform = `translateX(-${currentIndex * percent}%)`;
+            track.style.transform = `translateX(-${currentIndex * slidePercent}%)`;
             updateDots();
         }
 
         function goToSlide(index) {
-            const isMobile = window.innerWidth < 900;
-            const slidesPerView = isMobile ? 1 : 2;
-            const maxIndex = slides.length - slidesPerView;
+            const { slidesPerView } = getNewsSliderConfig();
+            const maxIndex = Math.max(0, slides.length - slidesPerView);
             currentIndex = Math.min(index, maxIndex);
             updateSliderPosition();
             resetAutoPlay();
@@ -261,27 +258,25 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         function nextSlide() {
-            const isMobile = window.innerWidth < 900;
-            const slidesPerView = isMobile ? 1 : 2;
-            const maxIndex = slides.length - slidesPerView;
+            const { slidesPerView } = getNewsSliderConfig();
+            const maxIndex = Math.max(0, slides.length - slidesPerView);
 
             if (currentIndex < maxIndex) {
                 currentIndex++;
             } else {
-                currentIndex = 0; // Loop back to start
+                currentIndex = 0;
             }
             updateSliderPosition();
         }
 
         function prevSlide() {
-            const isMobile = window.innerWidth < 900;
-            const slidesPerView = isMobile ? 1 : 2;
-            const maxIndex = slides.length - slidesPerView;
+            const { slidesPerView } = getNewsSliderConfig();
+            const maxIndex = Math.max(0, slides.length - slidesPerView);
 
             if (currentIndex > 0) {
                 currentIndex--;
             } else {
-                currentIndex = maxIndex; // Loop to end
+                currentIndex = maxIndex;
             }
             updateSliderPosition();
         }
@@ -304,7 +299,11 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // Handle resize
         window.addEventListener('resize', () => {
+            const { slidesPerView } = getNewsSliderConfig();
+            const maxIndex = Math.max(0, slides.length - slidesPerView);
+            if (currentIndex > maxIndex) currentIndex = maxIndex;
             updateSliderPosition();
+            resetAutoPlay();
         });
 
         // Initial call
