@@ -523,8 +523,9 @@ function saveOrder() {
 }
 
 .matricula-admin-wrapper {
-    max-width: 1600px;
-    margin: 0 auto;
+    width: 100%;
+    max-width: none;
+    margin: 0;
     font-family: 'Inter', system-ui, sans-serif;
     color: var(--text-main);
 }
@@ -661,7 +662,7 @@ function saveOrder() {
    ========================================= */
 .modern-tabs-wrapper {
     background: white;
-    padding: 0 1.5rem;
+    padding: 0 0.75rem;
     border-bottom: 1px solid var(--border);
     position: sticky;
     top: 0;
@@ -670,25 +671,28 @@ function saveOrder() {
 
 .modern-tabs {
     display: flex;
-    gap: 2rem;
-    overflow-x: auto;
-    scrollbar-width: none;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 0.25rem 0.875rem;
+    overflow-x: visible;
 }
 
 .tab-btn {
     background: none;
     border: none;
-    padding: 1.25rem 0;
-    font-size: 0.95rem;
+    padding: 0.65rem 0.35rem;
+    font-size: 0.8125rem;
     font-weight: 500;
     color: var(--text-secondary);
     cursor: pointer;
     position: relative;
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
+    gap: 0.35rem;
     white-space: nowrap;
+    flex-shrink: 0;
     transition: color 0.2s;
+    line-height: 1.25;
 }
 
 .tab-btn i { font-size: 1rem; margin-bottom: 2px; }
@@ -718,15 +722,18 @@ function saveOrder() {
 
 .tab-divider {
     width: 1px;
+    height: 1.25rem;
     background: var(--border);
-    margin: 1rem 0;
+    margin: 0 0.25rem;
+    align-self: center;
+    flex-shrink: 0;
 }
 
 /* =========================================
    Content Areas
    ========================================= */
 .tab-content-container {
-    padding: 2rem;
+    padding: 1.25rem;
     background: #fdfdfd;
     min-height: 600px;
 }
@@ -750,8 +757,8 @@ function saveOrder() {
    ========================================= */
 .designer-grid {
     display: grid;
-    grid-template-columns: 350px 1fr;
-    gap: 2rem;
+    grid-template-columns: minmax(280px, 320px) 1fr;
+    gap: 1.25rem;
     align-items: start;
 }
 

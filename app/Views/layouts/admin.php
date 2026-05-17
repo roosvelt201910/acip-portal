@@ -138,6 +138,10 @@
         .content-area {
             padding: 32px;
         }
+
+        .content-area.content-area--wide {
+            padding: 12px 16px;
+        }
         
         /* Utility Classes */
         .btn {
@@ -342,7 +346,7 @@
             </div>
             
             <!-- Content Area -->
-            <div class="content-area">
+            <div class="content-area <?= ($currentPage ?? '') === 'matricula' ? 'content-area--wide' : '' ?>">
                 <?php if (isset($_SESSION['success'])): ?>
                     <script>
                         document.addEventListener('DOMContentLoaded', function() {
