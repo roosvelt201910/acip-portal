@@ -15,12 +15,20 @@ jobs:
       - name: 📥 Checkout código
         uses: actions/checkout@v4
 
-      - name: 📦 Preparar producción
+      - name: 📦 Preparar public_html (estructura plana)
         run: |
-          mkdir -p storage/{cache,logs,sessions,uploads}
-          cp public/.htaccess.production public/.htaccess
+          set -e
+          rm -rf deploy
+          mkdir -p deploy
 
-      - name: 📤 Subir archivos al servidor (FTP)
+          cp -r app config includes deploy/
+          mkdir -p deploy/storage/{cache,logs,sessions,uploads}
+          cp -r public/. deploy/
+          cp public/.htaccess.production deploy/.htaccess
+          sed -i "s/define('BASE_PATH', dirname(__DIR__));/define('BASE_PATH', __DIR__);/" deploy/index.php
+          rm -f deploy/test_deploy.php deploy/info.php deploy/fix_reclamaciones_db.php deploy/test_doc.txt
+
+      - name: 📤 Subir a public_html
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
@@ -28,25 +36,22 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           port: 21
           protocol: ftps
-          server-dir: iespacip.edu.pe/
-          local-dir: ./
+          server-dir: public_html/
+          local-dir: ./deploy/
           timeout: 600000
           exclude: |
             **/.git*
             **/.git*/**
             **/node_modules/**
             **/.DS_Store
-            **/ftp_upload.py
             **/.env
             **/storage/logs/**
-            **/deploy/**
-            **/scripts/wipe_ftp_dir.py
           dangerous-clean-slate: false
 
       - name: ✅ Despliegue completado
         if: success()
         run: |
-          echo "✅ Portal ACIP desplegado exitosamente"
+          echo "✅ Portal ACIP desplegado en public_html"
           echo "🌐 URL: https://www.iespacip.edu.pe"
 
       - name: ❌ Falló el despliegue
