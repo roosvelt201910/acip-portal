@@ -1,0 +1,29 @@
+/**
+ * Estilos base del panel administrativo ACIP.
+ * El layout principal (sidebar, topbar) está en layouts/admin.php.
+ * Componentes reutilizables: admin-enterprise.css
+ */
+
+:root {
+    --admin-sidebar-width: 260px;
+    --admin-primary: #1e3a8a;
+    --admin-accent: #881337;
+}
+
+/* Utilidades compartidas en vistas admin */
+.admin-page-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #1e3a8a;
+    margin: 0 0 1rem;
+}
+
+.admin-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.admin-table-wrap table {
+    width: 100%;
+    min-width: 640px;
+}
