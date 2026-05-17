@@ -216,6 +216,18 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         }
 
+        const totalOriginal = parseInt(newsContainer.dataset.total, 10) || slides.length;
+        const dotsContainer = document.getElementById('news-dots');
+        const dotButtons = dotsContainer ? dotsContainer.querySelectorAll('.news-dot') : [];
+
+        function updateDots() {
+            if (!dotButtons.length) return;
+            const activeDot = currentIndex % totalOriginal;
+            dotButtons.forEach((dot, i) => {
+                dot.classList.toggle('active', i === activeDot);
+            });
+        }
+
         function updateSliderPosition() {
             const isMobile = window.innerWidth < 900;
             const percent = isMobile ? 100 : 50;
@@ -229,7 +241,24 @@ document.addEventListener('DOMContentLoaded', function () {
             if (currentIndex < 0) currentIndex = maxIndex;
 
             track.style.transform = `translateX(-${currentIndex * percent}%)`;
+            updateDots();
         }
+
+        function goToSlide(index) {
+            const isMobile = window.innerWidth < 900;
+            const slidesPerView = isMobile ? 1 : 2;
+            const maxIndex = slides.length - slidesPerView;
+            currentIndex = Math.min(index, maxIndex);
+            updateSliderPosition();
+            resetAutoPlay();
+        }
+
+        dotButtons.forEach((dot) => {
+            dot.addEventListener('click', () => {
+                const index = parseInt(dot.dataset.index, 10);
+                if (!isNaN(index)) goToSlide(index);
+            });
+        });
 
         function nextSlide() {
             const isMobile = window.innerWidth < 900;

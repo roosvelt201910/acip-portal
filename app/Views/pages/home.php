@@ -362,26 +362,41 @@ ob_start();
 <?php if (!empty($noticias)): ?>
 <section class="section noticias-destacadas">
     <div class="container">
-        <div class="section-header">
-            <h2>Noticias Destacadas</h2>
-            <a href="<?= url('/noticias') ?>" class="btn btn-outline">Ver todas</a>
+        <div class="section-header news-section-header">
+            <div class="news-section-intro">
+                <span class="section-eyebrow">Actualidad institucional</span>
+                <h2>Noticias Destacadas</h2>
+                <p class="section-subtitle">Las últimas novedades, logros y comunicados del Instituto ACIP</p>
+            </div>
+            <a href="<?= url('/noticias') ?>" class="btn-news-all">
+                Ver todas <i class="fas fa-arrow-right"></i>
+            </a>
         </div>
         
-        <div id="news-revolver" class="news-slider-container">
+        <div class="news-slider-wrapper">
+            <button class="news-prev" id="news-prev-btn" type="button" aria-label="Noticia anterior" onclick="window.moveNewsPrev()">
+                <i class="fas fa-chevron-left"></i>
+            </button>
+
+            <div id="news-revolver" class="news-slider-container" data-total="<?= count($noticias) ?>">
             <div class="news-track">
                 <?php foreach ($noticias as $noticia): ?>
                 <div class="noticia-slide">
                     <article class="noticia-card">
-                        <?php if ($noticia['imagen']): ?>
                         <div class="noticia-image">
-                            <img src="<?= url(e($noticia['imagen'])) ?>" alt="<?= e($noticia['titulo']) ?>">
+                            <?php if ($noticia['imagen']): ?>
+                            <img src="<?= url(e($noticia['imagen'])) ?>" alt="<?= e($noticia['titulo']) ?>" loading="lazy">
+                            <?php else: ?>
+                            <div class="noticia-image-placeholder" aria-hidden="true">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            <?php endif; ?>
                             <span class="noticia-categoria"><?= e(ucfirst($noticia['categoria'])) ?></span>
                         </div>
-                        <?php endif; ?>
                         <div class="noticia-content">
                             <div class="noticia-meta">
-                                <span><i class="far fa-calendar"></i> <?= formatDate($noticia['fecha_publicacion']) ?></span>
-                                <span><i class="far fa-user"></i> <?= e($noticia['autor_nombre']) ?></span>
+                                <span class="meta-pill"><i class="far fa-calendar"></i> <?= formatDate($noticia['fecha_publicacion']) ?></span>
+                                <span class="meta-pill"><i class="far fa-user"></i> <?= e($noticia['autor_nombre']) ?></span>
                             </div>
                             <h3><?= e($noticia['titulo']) ?></h3>
                             <p><?= e(truncate($noticia['resumen'], 120)) ?></p>
@@ -391,10 +406,20 @@ ob_start();
                 </div>
                 <?php endforeach; ?>
             </div>
-            
-            <button class="news-prev" id="news-prev-btn" onclick="window.moveNewsPrev()"><i class="fas fa-chevron-left"></i></button>
-            <button class="news-next" id="news-next-btn" onclick="window.moveNewsNext()"><i class="fas fa-chevron-right"></i></button>
+            </div>
+
+            <button class="news-next" id="news-next-btn" type="button" aria-label="Siguiente noticia" onclick="window.moveNewsNext()">
+                <i class="fas fa-chevron-right"></i>
+            </button>
         </div>
+
+        <?php if (count($noticias) > 1): ?>
+        <div class="news-dots" id="news-dots" role="tablist" aria-label="Paginación de noticias">
+            <?php for ($i = 0; $i < count($noticias); $i++): ?>
+            <button type="button" class="news-dot<?= $i === 0 ? ' active' : '' ?>" data-index="<?= $i ?>" aria-label="Ir a noticia <?= $i + 1 ?>"></button>
+            <?php endfor; ?>
+        </div>
+        <?php endif; ?>
     </div>
 </section>
 <?php endif; ?>
