@@ -4,7 +4,6 @@ Thumbs.db
 *.log
 
 # Configuración local (no subir credenciales)
-config/database.php
 config/config.local.php
 .env
 .env.local
