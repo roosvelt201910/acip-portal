@@ -326,6 +326,11 @@ ob_start();
 <!-- Scripts & Styles -->
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
 <script src="https://cdn.ckeditor.com/4.22.1/full/ckeditor.js"></script>
+<script>
+if (typeof CKEDITOR !== 'undefined') {
+    CKEDITOR.config.versionCheck = false;
+}
+</script>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -347,6 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
     // 2. CKEditor Initialization
     const editorConfig = {
         height: 400,
+        versionCheck: false,
         removePlugins: 'exportpdf',
         uiColor: '#ffffff',
         toolbar: [

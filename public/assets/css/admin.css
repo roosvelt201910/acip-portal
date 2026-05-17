@@ -27,3 +27,8 @@
     width: 100%;
     min-width: 640px;
 }
+
+/* CKEditor 4.22+: ocultar aviso de versión (barra roja mal posicionada en el layout admin) */
+.cke_notifications_area {
+    display: none !important;
+}
