@@ -14,11 +14,29 @@ body {
     overflow-x: hidden;
 }
 
-.container {
-    width: 100%;
-    max-width: 1440px;
-    padding-left: clamp(12px, 3vw, 24px);
-    padding-right: clamp(12px, 3vw, 24px);
+/* Evitar franja blanca por desbordamiento horizontal */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}
+
+section,
+.hero-slider,
+.slider-container,
+.slide,
+.slide-overlay,
+.video-background {
+    max-width: 100%;
+}
+
+.slide .video-background iframe,
+.slide .video-background video {
+    width: 100% !important;
+    height: 100% !important;
+    min-width: 100%;
+    min-height: 100%;
+    max-width: none;
 }
 
 img,
@@ -483,10 +501,21 @@ iframe {
     }
 }
 
+/* ── Pantallas medianas-grandes: menú compacto ──────────── */
+@media (min-width: 1101px) and (max-width: 1400px) {
+    .nav-menu > li > a {
+        padding: 10px 10px;
+        font-size: 13px;
+    }
+
+    .navbar-content {
+        gap: 16px;
+    }
+}
+
 /* ── Escritorio amplio ────────────────────────────────────── */
-@media (min-width: 1400px) {
+@media (min-width: 1401px) {
     .container {
-        padding-left: 24px;
-        padding-right: 24px;
+        max-width: min(1440px, 100%);
     }
 }

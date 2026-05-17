@@ -257,7 +257,7 @@ ob_start();
             ?>
                 <div class="video-background" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; overflow: hidden; z-index: 1;">
                     <?php if ($isIframe): ?>
-                        <iframe src="<?= $videoUrl ?>?background=1&autoplay=1&loop=1&byline=0&title=0" frameborder="0" style="position: absolute; top: 50%; left: 50%; width: 100vw; height: 100vh; transform: translate(-50%, -50%); pointer-events: none;" allow="autoplay; encrypted-media"></iframe>
+                        <iframe src="<?= $videoUrl ?>?background=1&autoplay=1&loop=1&byline=0&title=0" frameborder="0" style="position: absolute; top: 50%; left: 50%; width: 100%; height: 100%; min-width: 100%; min-height: 100%; transform: translate(-50%, -50%); pointer-events: none; border: 0;" allow="autoplay; encrypted-media"></iframe>
                     <?php else: ?>
                          <video autoplay muted loop playsinline style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translateX(-50%) translateY(-50%); object-fit: cover;">
                             <source src="<?= e($videoUrl) ?>" type="video/mp4">
